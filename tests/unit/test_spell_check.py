@@ -15,6 +15,7 @@ class TestSpellChecker:
     def test_import(self):
         """Test that module can be imported"""
         from scripts.spell_check import SpellChecker
+
         assert SpellChecker is not None
 
     def test_basic_correction(self):
@@ -29,13 +30,14 @@ class TestSpellChecker:
             ("wrold", "world"),
             ("recieve", "receive"),
             ("occured", "occurred"),
-            ("seperate", "separate")
+            ("seperate", "separate"),
         ]
 
         for misspelled, expected in test_cases:
             result = checker.correct_text(misspelled)
-            assert expected in result.lower(), \
-                f"Expected '{expected}' in result for '{misspelled}', got '{result}'"
+            assert (
+                expected in result.lower()
+            ), f"Expected '{expected}' in result for '{misspelled}', got '{result}'"
 
     def test_preserve_case(self):
         """Test that original case is preserved"""
@@ -43,17 +45,14 @@ class TestSpellChecker:
 
         checker = SpellChecker()
 
-        test_cases = [
-            ("Helllo", "Hello"),
-            ("WROLD", "WORLD"),
-            ("ReCieVe", "Receive")
-        ]
+        test_cases = [("Helllo", "Hello"), ("WROLD", "WORLD"), ("ReCieVe", "Receive")]
 
         for misspelled, expected in test_cases:
             result = checker.correct_text(misspelled)
             # Check first letter case is preserved
-            assert result[0].isupper() == expected[0].isupper(), \
-                f"Case not preserved for '{misspelled}'"
+            assert (
+                result[0].isupper() == expected[0].isupper()
+            ), f"Case not preserved for '{misspelled}'"
 
     def test_skip_urls_and_paths(self):
         """Test that URLs and paths are not corrected"""
@@ -68,7 +67,7 @@ class TestSpellChecker:
             "config.yaml",
             "${VARIABLE}",
             "function_name()",
-            "[array_index]"
+            "[array_index]",
         ]
 
         for text in test_cases:
@@ -112,7 +111,7 @@ class TestSpellChecker:
             ("The wrold.", "The world."),
             ("(recieve)", "(receive)"),
             ("'occured'", "'occurred'"),
-            ('"seperate"', '"separate"')
+            ('"seperate"', '"separate"'),
         ]
 
         for misspelled, expected in test_cases:

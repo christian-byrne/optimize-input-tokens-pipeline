@@ -68,7 +68,7 @@ def abbreviations_dict():
         "procedures": "procs",
         "information": "info",
         "documentation": "docs",
-        "initialization": "init"
+        "initialization": "init",
     }
 
 
@@ -89,14 +89,14 @@ def temp_config_file(temp_dir):
             "spell_check": {"enabled": True, "max_edit_distance": 2},
             "abbreviations": {"enabled": True, "custom_dict_path": "config/abbreviations.json"},
             "token_aware": {"enabled": True, "min_token_savings": 1},
-            "ml_paraphrase": {"enabled": True, "model": "t5-small", "max_length_ratio": 0.8}
+            "ml_paraphrase": {"enabled": True, "model": "t5-small", "max_length_ratio": 0.8},
         },
         "logging": {"level": "INFO", "file": "logs/test.log"},
-        "performance": {"batch_size": 32, "cache_enabled": True}
+        "performance": {"batch_size": 32, "cache_enabled": True},
     }
 
     config_path = temp_dir / "pipeline_config.yaml"
-    with open(config_path, 'w') as f:
+    with open(config_path, "w") as f:
         yaml.dump(config, f)
 
     return config_path
@@ -106,20 +106,12 @@ def temp_config_file(temp_dir):
 def temp_abbreviations_file(temp_dir):
     """Create a temporary abbreviations file"""
     abbrevs = {
-        "technical_terms": {
-            "repository": "repo",
-            "development": "dev",
-            "configuration": "config"
-        },
-        "common_phrases": {
-            "please": "",
-            "could you": "",
-            "thank you very much": "thanks"
-        }
+        "technical_terms": {"repository": "repo", "development": "dev", "configuration": "config"},
+        "common_phrases": {"please": "", "could you": "", "thank you very much": "thanks"},
     }
 
     abbrev_path = temp_dir / "abbreviations.json"
-    with open(abbrev_path, 'w') as f:
+    with open(abbrev_path, "w") as f:
         json.dump(abbrevs, f)
 
     return abbrev_path
@@ -128,11 +120,13 @@ def temp_abbreviations_file(temp_dir):
 @pytest.fixture
 def mock_tokenizer():
     """Mock tokenizer for testing without loading models"""
+
     class MockTokenizer:
         def encode(self, text, add_special_tokens=False):
             # Simple mock: split on spaces and punctuation
             import re
-            tokens = re.findall(r'\w+|[^\w\s]', text.lower())
+
+            tokens = re.findall(r"\w+|[^\w\s]", text.lower())
             return list(range(len(tokens)))  # Return dummy token IDs
 
         def decode(self, token_ids, skip_special_tokens=True):
@@ -152,16 +146,16 @@ def sample_pipeline_output():
     return {
         "spell_check": {
             "input": "Please could you helpp me understand the repositry?",
-            "output": "Please could you help me understand the repository?"
+            "output": "Please could you help me understand the repository?",
         },
         "abbreviations": {
             "input": "Please could you help me understand the repository configuration?",
-            "output": "help me understand the repo config?"
+            "output": "help me understand the repo config?",
         },
         "token_aware": {
             "input": "it is important to note that we have requirements",
-            "output": "it's important to note that we have requirements"
-        }
+            "output": "it's important to note that we have requirements",
+        },
     }
 
 
@@ -190,7 +184,7 @@ class TestHelpers:
     @staticmethod
     def create_test_file(path, content):
         """Create a test file with content"""
-        with open(path, 'w') as f:
+        with open(path, "w") as f:
             f.write(content)
         return path
 
@@ -201,16 +195,17 @@ class TestHelpers:
         import re
 
         # Extract important words (nouns, verbs)
-        important_words = set(re.findall(r'\b[A-Za-z]{4,}\b', original.lower()))
-        preserved_words = set(re.findall(r'\b[A-Za-z]{4,}\b', optimized.lower()))
+        important_words = set(re.findall(r"\b[A-Za-z]{4,}\b", original.lower()))
+        preserved_words = set(re.findall(r"\b[A-Za-z]{4,}\b", optimized.lower()))
 
         # Calculate simple similarity
         if not important_words:
             return True
 
         similarity = len(important_words & preserved_words) / len(important_words)
-        assert similarity >= min_similarity, \
-            f"Text similarity {similarity:.2f} below threshold {min_similarity}"
+        assert (
+            similarity >= min_similarity
+        ), f"Text similarity {similarity:.2f} below threshold {min_similarity}"
 
 
 @pytest.fixture

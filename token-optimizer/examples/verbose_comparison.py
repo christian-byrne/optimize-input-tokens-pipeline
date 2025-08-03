@@ -23,10 +23,7 @@ print("-" * 50)
 print("\n📊 Running in NORMAL mode:")
 print("=" * 50)
 result = subprocess.run(
-    [sys.executable, "pipeline.py"],
-    input=sample_text,
-    capture_output=True,
-    text=True
+    [sys.executable, "pipeline.py"], input=sample_text, capture_output=True, text=True
 )
 print("Output:", result.stdout)
 print("Stats:", result.stderr)

@@ -23,7 +23,7 @@ class TestFullPipeline:
         input_file = temp_dir / "input.txt"
         output_file = temp_dir / "output.txt"
 
-        with open(input_file, 'w') as f:
+        with open(input_file, "w") as f:
             f.write(sample_text)
 
         # Run pipeline
@@ -31,7 +31,8 @@ class TestFullPipeline:
             sys.executable,
             str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
             str(input_file),
-            "-o", str(output_file)
+            "-o",
+            str(output_file),
         ]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -54,17 +55,9 @@ class TestFullPipeline:
     @pytest.mark.integration
     def test_stdin_stdout_processing(self, sample_text):
         """Test processing via stdin/stdout"""
-        cmd = [
-            sys.executable,
-            str(TOKEN_OPTIMIZER_PATH / "pipeline.py")
-        ]
+        cmd = [sys.executable, str(TOKEN_OPTIMIZER_PATH / "pipeline.py")]
 
-        result = subprocess.run(
-            cmd,
-            input=sample_text,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, input=sample_text, capture_output=True, text=True)
 
         assert result.returncode == 0
         assert len(result.stdout) > 0
@@ -76,15 +69,12 @@ class TestFullPipeline:
         cmd = [
             sys.executable,
             str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
-            "--stages", "spell_check", "abbreviations"
+            "--stages",
+            "spell_check",
+            "abbreviations",
         ]
 
-        result = subprocess.run(
-            cmd,
-            input=sample_text,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, input=sample_text, capture_output=True, text=True)
 
         assert result.returncode == 0
 
@@ -97,18 +87,9 @@ class TestFullPipeline:
     @pytest.mark.integration
     def test_analyze_mode(self, long_sample_text):
         """Test analyze mode"""
-        cmd = [
-            sys.executable,
-            str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
-            "--analyze"
-        ]
+        cmd = [sys.executable, str(TOKEN_OPTIMIZER_PATH / "pipeline.py"), "--analyze"]
 
-        result = subprocess.run(
-            cmd,
-            input=long_sample_text,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, input=long_sample_text, capture_output=True, text=True)
 
         assert result.returncode == 0
 
@@ -118,18 +99,9 @@ class TestFullPipeline:
     @pytest.mark.integration
     def test_count_only_mode(self, sample_text):
         """Test count-only mode"""
-        cmd = [
-            sys.executable,
-            str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
-            "--count-only"
-        ]
+        cmd = [sys.executable, str(TOKEN_OPTIMIZER_PATH / "pipeline.py"), "--count-only"]
 
-        result = subprocess.run(
-            cmd,
-            input=sample_text,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, input=sample_text, capture_output=True, text=True)
 
         assert result.returncode == 0
 
@@ -146,18 +118,9 @@ class TestFullPipeline:
         current_text = long_sample_text
 
         for stage in stages:
-            cmd = [
-                sys.executable,
-                str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
-                "--stages", stage
-            ]
+            cmd = [sys.executable, str(TOKEN_OPTIMIZER_PATH / "pipeline.py"), "--stages", stage]
 
-            result = subprocess.run(
-                cmd,
-                input=current_text,
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run(cmd, input=current_text, capture_output=True, text=True)
 
             assert result.returncode == 0
 
@@ -170,11 +133,7 @@ class TestFullPipeline:
     def test_error_handling(self):
         """Test error handling for invalid inputs"""
         # Test with non-existent file
-        cmd = [
-            sys.executable,
-            str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
-            "nonexistent_file.txt"
-        ]
+        cmd = [sys.executable, str(TOKEN_OPTIMIZER_PATH / "pipeline.py"), "nonexistent_file.txt"]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
 
@@ -184,18 +143,9 @@ class TestFullPipeline:
     @pytest.mark.integration
     def test_verbose_mode_runs(self, sample_text):
         """Test that verbose mode runs without errors"""
-        cmd = [
-            sys.executable,
-            str(TOKEN_OPTIMIZER_PATH / "pipeline.py"),
-            "--verbose"
-        ]
+        cmd = [sys.executable, str(TOKEN_OPTIMIZER_PATH / "pipeline.py"), "--verbose"]
 
-        result = subprocess.run(
-            cmd,
-            input=sample_text,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, input=sample_text, capture_output=True, text=True)
 
         # Verbose mode might fail if rich is not installed
         # Just check it doesn't crash catastrophically

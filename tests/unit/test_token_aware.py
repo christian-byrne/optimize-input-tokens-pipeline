@@ -14,6 +14,7 @@ class TestTokenAwareOptimizer:
     def test_import(self):
         """Test that module can be imported"""
         from scripts.token_aware import TokenAwareOptimizer
+
         assert TokenAwareOptimizer is not None
 
     def test_token_counting(self, mock_tokenizer, monkeypatch):
@@ -23,7 +24,7 @@ class TestTokenAwareOptimizer:
         # Mock the AutoTokenizer
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         # Test counting
         count = optimizer._count_tokens("hello world test")
@@ -35,21 +36,20 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2', min_savings=1)
+        optimizer = TokenAwareOptimizer(model_name="gpt2", min_savings=1)
 
         test_cases = [
             ("it is", "it's"),
             ("you are", "you're"),
             ("do not", "don't"),
             ("cannot", "can't"),
-            ("will not", "won't")
+            ("will not", "won't"),
         ]
 
         for original, expected in test_cases:
             text = f"I think {original} important"
             result, stats = optimizer.optimize_text(text)
-            assert expected in result.lower(), \
-                f"Expected '{expected}' in result for '{original}'"
+            assert expected in result.lower(), f"Expected '{expected}' in result for '{original}'"
 
     def test_min_savings_threshold(self, mock_tokenizer, monkeypatch):
         """Test minimum savings threshold"""
@@ -69,7 +69,7 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", CustomMockTokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2', min_savings=1)
+        optimizer = TokenAwareOptimizer(model_name="gpt2", min_savings=1)
 
         text = "it is a test"
         result, stats = optimizer.optimize_text(text)
@@ -84,13 +84,9 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
-        test_cases = [
-            ("It Is", "It's"),
-            ("YOU ARE", "YOU'RE"),
-            ("Do Not", "Don't")
-        ]
+        test_cases = [("It Is", "It's"), ("YOU ARE", "YOU'RE"), ("Do Not", "Don't")]
 
         for original, expected_pattern in test_cases:
             result, _ = optimizer.optimize_text(original)
@@ -103,7 +99,7 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         text = "This is basically just a test"
         result, _ = optimizer.optimize_text(text)
@@ -117,16 +113,16 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         text = "it is important that you are aware"
         result, stats = optimizer.optimize_text(text)
 
-        assert 'total_tokens_saved' in stats
-        assert 'replacements' in stats
-        assert 'original_tokens' in stats
-        assert 'optimized_tokens' in stats
-        assert stats['total_tokens_saved'] >= 0
+        assert "total_tokens_saved" in stats
+        assert "replacements" in stats
+        assert "original_tokens" in stats
+        assert "optimized_tokens" in stats
+        assert stats["total_tokens_saved"] >= 0
 
     def test_analyze_mode(self, mock_tokenizer, monkeypatch):
         """Test analyze mode without applying changes"""
@@ -134,7 +130,7 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         text = "it is very important that you are here"
         optimizations = optimizer.analyze_text(text)
@@ -142,7 +138,7 @@ class TestTokenAwareOptimizer:
         assert isinstance(optimizations, list)
 
         # Should find potential optimizations
-        phrases = [opt['phrase'] for opt in optimizations]
+        phrases = [opt["phrase"] for opt in optimizations]
         assert any(phrase in ["it is", "you are", "very"] for phrase in phrases)
 
     def test_technical_shortcuts(self, mock_tokenizer, monkeypatch):
@@ -151,14 +147,14 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         test_cases = [
             ("version 2.0", "v 2.0"),
             ("for example", "e.g."),
             ("that is", "i.e."),
             ("versus", "vs"),
-            ("number 5", "# 5")
+            ("number 5", "# 5"),
         ]
 
         for original, expected_pattern in test_cases:
@@ -173,7 +169,7 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         # Should not replace parts of words
         text = "The donut shop is open"
@@ -188,11 +184,11 @@ class TestTokenAwareOptimizer:
 
         monkeypatch.setattr("scripts.token_aware.AutoTokenizer", mock_tokenizer)
 
-        optimizer = TokenAwareOptimizer(model_name='gpt2')
+        optimizer = TokenAwareOptimizer(model_name="gpt2")
 
         text = "It is important that you are aware. Do not forget this."
         result, stats = optimizer.optimize_text(text)
 
         # Should have multiple replacements
-        assert len(stats['replacements']) >= 2
-        assert stats['total_tokens_saved'] > 0
+        assert len(stats["replacements"]) >= 2
+        assert stats["total_tokens_saved"] > 0

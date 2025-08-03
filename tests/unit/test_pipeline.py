@@ -17,6 +17,7 @@ class TestTokenOptimizationPipeline:
     def test_import(self):
         """Test that pipeline can be imported"""
         from pipeline import TokenOptimizationPipeline
+
         assert TokenOptimizationPipeline is not None
 
     def test_pipeline_initialization(self, temp_config_file):
@@ -52,16 +53,16 @@ class TestTokenOptimizationPipeline:
         with open(temp_config_file) as f:
             config = yaml.safe_load(f)
 
-        config['pipeline']['spell_check']['enabled'] = False
+        config["pipeline"]["spell_check"]["enabled"] = False
 
-        with open(temp_config_file, 'w') as f:
+        with open(temp_config_file, "w") as f:
             yaml.dump(config, f)
 
         pipeline = TokenOptimizationPipeline(config_path=str(temp_config_file))
 
         # The spell_check stage should be skipped
-        result = pipeline.run_stage('spell_check', '01_spell_check.py', 'test input')
-        assert result == 'test input'  # Should return unchanged
+        result = pipeline.run_stage("spell_check", "01_spell_check.py", "test input")
+        assert result == "test input"  # Should return unchanged
 
     def test_stage_failure_handling(self, temp_config_file, mock_tokenizer, monkeypatch):
         """Test handling of stage failures"""
@@ -72,10 +73,10 @@ class TestTokenOptimizationPipeline:
         pipeline = TokenOptimizationPipeline(config_path=str(temp_config_file))
 
         # Try to run a non-existent script
-        result = pipeline.run_stage('test_stage', 'nonexistent.py', 'test input')
+        result = pipeline.run_stage("test_stage", "nonexistent.py", "test input")
 
         # Should return original input on failure
-        assert result == 'test input'
+        assert result == "test input"
 
     def test_analyze_text(self, temp_config_file, mock_tokenizer, monkeypatch, capsys):
         """Test analyze_text functionality"""
@@ -90,6 +91,7 @@ class TestTokenOptimizationPipeline:
                 returncode = 0
                 stdout = '[{"phrase": "it is", "suggested": "it\'s", "occurrences": 2, "total_savings": 2}]'
                 stderr = ""
+
             return Result()
 
         monkeypatch.setattr("subprocess.run", mock_run)
@@ -109,6 +111,7 @@ class TestVerbosePipeline:
         """Test that verbose pipeline can be imported"""
         try:
             from pipeline_verbose import VerboseTokenOptimizationPipeline
+
             assert VerboseTokenOptimizationPipeline is not None
         except ImportError:
             pytest.skip("Verbose pipeline requires rich library")
@@ -122,10 +125,7 @@ class TestVerbosePipeline:
 
         monkeypatch.setattr("transformers.AutoTokenizer", mock_tokenizer)
 
-        pipeline = VerboseTokenOptimizationPipeline(
-            config_path=str(temp_config_file),
-            verbose=True
-        )
+        pipeline = VerboseTokenOptimizationPipeline(config_path=str(temp_config_file), verbose=True)
 
         assert pipeline.verbose is True
         assert pipeline.diff_viewer is not None
@@ -141,8 +141,7 @@ class TestVerbosePipeline:
         monkeypatch.setattr("transformers.AutoTokenizer", mock_tokenizer)
 
         pipeline = VerboseTokenOptimizationPipeline(
-            config_path=str(temp_config_file),
-            verbose=False  # Disable verbose output for testing
+            config_path=str(temp_config_file), verbose=False  # Disable verbose output for testing
         )
 
         assert len(pipeline.stage_history) == 0
