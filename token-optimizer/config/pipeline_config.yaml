@@ -1,0 +1,35 @@
+# Token Optimizer Pipeline Configuration
+
+# Target tokenizer model (change based on your LLM)
+tokenizer:
+  model: "gpt2"  # Options: gpt2, gpt-3.5-turbo, claude, llama, etc.
+  
+# Pipeline stages (can enable/disable)
+pipeline:
+  spell_check:
+    enabled: true
+    max_edit_distance: 2
+    
+  abbreviations:
+    enabled: true
+    custom_dict_path: "config/abbreviations.json"
+    
+  token_aware:
+    enabled: true
+    min_token_savings: 1  # Only replace if saves at least 1 token
+    
+  ml_paraphrase:
+    enabled: true
+    model: "t5-small"  # Small model as requested
+    max_length_ratio: 0.8  # Target 80% of original length
+    
+# Logging
+logging:
+  level: "INFO"
+  file: "logs/pipeline.log"
+  
+# Performance
+performance:
+  batch_size: 32
+  cache_enabled: true
+  cache_dir: "data/cache"

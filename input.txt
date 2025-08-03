@@ -1,0 +1,3 @@
+My goal today is to find ways to reduce cost on LLM inputs. I sue llms entirely through terminal and the llms i use have access to scripts. so i want a series of pre processors, scripts, commands, SOPs, and also a set of tasks involving compressing existing knowledge bases to be optimized for agents. Can you check the two markdown fil
+es in here for ideas, then populate the todo.md based on all possible solutions, research directions, tasks, etc
+

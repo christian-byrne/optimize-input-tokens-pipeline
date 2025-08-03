@@ -1,0 +1,14 @@
+Please could you help me understand the repository configuration? I would like to know about the development environment setup, including the authentication and authorization requirements. 
+
+The application seems to have multiple environments - development, staging, and production. Can you provide information about the database configurations for each environment?
+
+I am particularly interested in understanding:
+- The repository structure and organization
+- Environment variables and configurations
+- Authentication mechanisms and certificate management  
+- How to initialize the development environment
+- Database connection parameters and specifications
+
+Additionally, it would be very helpful if you could explain the dependency management process and the requirements for setting up the application locally.
+
+Thank you very much for your assistance!
