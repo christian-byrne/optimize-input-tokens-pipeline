@@ -2,6 +2,8 @@
 
 A modular pipeline for reducing LLM token usage while preserving semantic meaning.
 
+![alt text](screenshot.png)
+
 ## Features
 
 - **Spell Checking**: Fixes typos that waste tokens
@@ -15,6 +17,7 @@ A modular pipeline for reducing LLM token usage while preserving semantic meanin
 ## Quick Start
 
 1. **Setup Environment**
+
 ```bash
 chmod +x setup.sh
 ./setup.sh
@@ -22,6 +25,7 @@ source venv/bin/activate
 ```
 
 2. **Basic Usage**
+
 ```bash
 # Process a file
 python pipeline.py input.txt -o output.txt
@@ -37,6 +41,7 @@ python pipeline.py input.txt --verbose
 ```
 
 3. **Run Individual Stages**
+
 ```bash
 # Just spell check
 python scripts/01_spell_check.py input.txt
@@ -63,21 +68,25 @@ Edit `config/pipeline_config.yaml` to:
 ## Pipeline Stages
 
 ### 1. Spell Check (`01_spell_check.py`)
+
 - Fixes common typos using SymSpell
 - Preserves code blocks and URLs
 - Maintains original case
 
 ### 2. Abbreviations (`02_abbreviations.py`)
+
 - Replaces verbose phrases with standard abbreviations
 - Customizable via `config/abbreviations.json`
 - Context-aware replacements
 
 ### 3. Token-Aware (`03_token_aware.py`)
+
 - Counts actual tokens before/after replacement
 - Only applies changes that save tokens
 - Model-specific optimization
 
 ### 4. ML Paraphrase (`04_ml_paraphrase.py`)
+
 - Uses T5-small for intelligent compression
 - Can use LLMLingua if installed
 - Maintains semantic meaning
@@ -85,6 +94,7 @@ Edit `config/pipeline_config.yaml` to:
 ## Examples
 
 ### Example 1: Basic Compression
+
 ```bash
 $ echo "I would like to understand the repository configuration please" | python pipeline.py
 
@@ -92,6 +102,7 @@ want understand repo config
 ```
 
 ### Example 2: Technical Text
+
 ```bash
 $ echo "The development environment requires authentication and authorization" | python pipeline.py
 
@@ -99,6 +110,7 @@ dev env requires auth authz
 ```
 
 ### Example 3: Analysis Mode
+
 ```bash
 $ python pipeline.py document.txt --analyze
 
@@ -111,7 +123,9 @@ Potential token-aware optimizations:
 ## Customization
 
 ### Add Custom Abbreviations
+
 Edit `config/abbreviations.json`:
+
 ```json
 {
   "technical_terms": {
@@ -122,21 +136,25 @@ Edit `config/abbreviations.json`:
 ```
 
 ### Change Target Model
+
 Edit `config/pipeline_config.yaml`:
+
 ```yaml
 tokenizer:
-  model: "gpt-3.5-turbo"  # or "claude", "llama2", etc.
+  model: "gpt-3.5-turbo" # or "claude", "llama2", etc.
 ```
 
 ### Adjust Compression Level
+
 ```yaml
 ml_paraphrase:
-  max_length_ratio: 0.6  # More aggressive (60% of original)
+  max_length_ratio: 0.6 # More aggressive (60% of original)
 ```
 
 ## Performance
 
 Typical results:
+
 - Rule-based stages: <50ms
 - ML paraphrasing: 200-500ms (CPU), 50-100ms (GPU)
 - Overall reduction: 30-60% fewer tokens
@@ -146,22 +164,26 @@ Typical results:
 The `--verbose` flag enables a beautiful terminal UI that shows:
 
 ### Visual Diffs
+
 - Side-by-side before/after comparison
 - Color-coded changes (red=removed, green=added)
 - Word-level highlighting
 
 ### Detailed Statistics
+
 - Token counts at each stage
 - Processing time per stage
 - Replacement frequency tables
 - Cost savings estimation
 
 ### Progress Visualization
+
 - Token reduction progress bars
 - Stage-by-stage transformation
 - Final summary with charts
 
 ### Example:
+
 ```bash
 # See the magic happen
 python pipeline.py test_example.txt --verbose
